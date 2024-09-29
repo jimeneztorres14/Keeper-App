@@ -1,28 +1,68 @@
-import React from "react";
+import React, {useState} from "react";
 import Header from "./Header";
-import Note from "./Note";
 import Footer from "./Footer";
-import notes from "../notes";
+import Note from "./Note";
+import CreateArea from "./CreateArea";
 
-console.log(notes);
+function App() {
+  const [fullNote, setNote] = useState({
+    noteTitle:"",
+    noteContent:""
+  });
+  const [noteList, setNoteList] = useState([])
 
-function NotesHolder(data){
-    return(
-    <Note
-    key={data.key}
-    title={data.title}
-    content={data.content}
-    />)
-};
 
-function App(){
-    return(
-        <div>
-            <Header />
-            {notes.map(NotesHolder)}
-            <Footer />
-        </div>
-    )
-};
+  function handleInput(event){
+    const inputValue = event.target.value;
+    const inputName = event.target.name;
+
+    setNote((prevValue)=>{
+      if(inputName === "title"){
+        return {
+          noteTitle:inputValue,
+          noteContent:prevValue.noteContent
+        }
+      }else if(inputName === "content"){
+        return{
+          noteTitle:prevValue.noteTitle,
+          noteContent:inputValue
+        }
+      }
+    })
+  };
+
+  function handleButton(event){
+    event.preventDefault();
+    setNoteList((prevNotes)=>{
+      return [...prevNotes, fullNote]
+    })
+  };
+
+  function deleteNote(id){
+    setNoteList((prevNotes) =>{
+      return prevNotes.filter((note, index)=>{
+        return index != id;
+      })
+    })
+  }
+
+  return (
+    <div>
+      <Header />
+      <CreateArea
+      onInput={handleInput}
+      onButton={handleButton}
+      titleValue={fullNote.noteTitle}
+      contentValue={fullNote.noteContent}
+      />
+      {noteList.map((note, index)=>{
+      return <Note key={index} id={index} title={note.noteTitle} content={note.noteContent} onDelete={deleteNote}/>
+      })}
+      <Footer />
+    </div>
+  );
+}
 
 export default App;
+
+
