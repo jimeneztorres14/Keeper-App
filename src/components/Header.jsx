@@ -1,9 +1,10 @@
 import React from "react";
+import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 
 function Header() {
   return (
     <header>
-      <h1>Keeper</h1>
+      <h1><ChecklistRtlIcon /> Keeper</h1>
     </header>
   );
 }
