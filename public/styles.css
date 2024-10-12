@@ -121,10 +121,15 @@ form.create-note button {
   }
 
   .note{
-    width: 80%;
-    margin: 10px 10px 10px 55px;
+    display: flex;
+    flex-direction: column;
+    width: 92%;
     padding: 15px;
     border-radius: 7px;
+  }
+
+  .note button {
+    text-align: end;
   }
   
 }
