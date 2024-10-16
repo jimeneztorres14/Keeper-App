@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
 import Zoom from '@mui/material/Zoom';
+import { sql } from "./App";
 
 function CreateArea(props) {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -9,6 +10,7 @@ function CreateArea(props) {
     noteTitle:"",
     noteContent:""
   });
+
 
   function handleInput(event){
     const inputValue = event.target.value;
@@ -29,7 +31,12 @@ function CreateArea(props) {
     })
   };
 
-  function submitNote(event) {
+  async function submitNote(event) {
+    await sql('INSERT INTO notes (note_title, note_content) VALUES ($1, $2)', [fullNote.noteTitle, fullNote.noteContent]);
+    const notesDb = await sql('SELECT * FROM notes');
+    console.log(notesDb)
+
+
     props.onAdd(fullNote);
     setNote({
       noteTitle: "",
