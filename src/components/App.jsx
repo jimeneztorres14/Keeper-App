@@ -14,7 +14,7 @@ function App() {
       return sql('SELECT * FROM notes')
         .then((notesDb) => {
           const newArray = notesDb.map((note) => {
-            return { id:note.id, noteTitle: note.note_title, noteContent: note.note_content };
+            return {id:note.id, noteTitle: note.note_title, noteContent: note.note_content };
           });
           return newArray;
         })
@@ -28,23 +28,24 @@ function App() {
   }, [])
 
 
-  function addNote(noteList) {
+  async function addNote(noteList) {
+    console.log(noteList)
     setNoteList((prevNotes) => {
       return [...prevNotes, noteList];
     });
     
   }
 
-  function deleteNote(id){
-    setNoteList((prevNotes) =>{
-      sql('DELETE FROM notes WHERE id =($1)', [id]).then()
-      return prevNotes.filter((note, index)=>{
-        return index != id;
-      })
-    })
+  async function deleteNote(id){
+    const notes = await sql("SELECT * FROM notes");
+    console.log(notes)
+    setNoteList(notes)
+    // setNoteList((prevNotes) =>{
+    //   return prevNotes.filter((note, index)=>{
+    //     return index != id;
+    //   })
+    // })
   }
-
-  console.log(noteList)
 
   return (
     <div>
@@ -52,8 +53,9 @@ function App() {
       <CreateArea
       onAdd={addNote}
       />
-      {noteList.map((note)=>{
-      return <Note key={note.id} id={note.id} title={note.noteTitle} content={note.noteContent} onDelete={deleteNote}/>
+      {noteList.map((note, index)=>{
+        // console.log(note)
+      return <Note key={index} id={index} title={note.noteTitle} content={note.noteContent} onDelete={deleteNote}/>
       })}
       <Footer />
     </div>
