@@ -9,7 +9,9 @@ function Note(props) {
       <h1>{props.title}</h1>
       <p>{props.content}</p>
       <button onClick={async ()=>{
-        console.log(props.content)
+
+
+        console.log(props)
         if(props.id === undefined){
           const notes = await sql("SELECT * FROM notes");
           const noteToDelete = notes[notes.length - 1]
@@ -21,6 +23,9 @@ function Note(props) {
             props.onDelete(props.id)
           })
         }
+
+
+        
         }} ><DeleteIcon /></button>
     </div>
   );

@@ -7,6 +7,7 @@ import { sql } from "./App";
 function CreateArea(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [fullNote, setNote] = useState({
+    id:"",
     noteTitle:"",
     noteContent:""
   });
@@ -32,12 +33,25 @@ function CreateArea(props) {
   };
 
   async function submitNote(event) {
-    props.onAdd(fullNote);
+    const noteId = crypto.randomUUID()
+    setNote((prevValue)=>{
+      const newNote = {
+        ...prevValue,
+        id:noteId,
+      }
+      props.onAdd(newNote);
+      return newNote;
+    })
+
+
     setNote({
+      id:"",
       noteTitle: "",
       noteContent: ""
     });
-    await sql('INSERT INTO notes (note_title, note_content) VALUES ($1, $2)', [fullNote.noteTitle, fullNote.noteContent]);
+
+
+    await sql('INSERT INTO notes (id, note_title, note_content) VALUES ($1, $2, $3)', [noteId, fullNote.noteTitle, fullNote.noteContent]);
     const notesDb = await sql('SELECT * FROM notes');
 
     event.preventDefault();
