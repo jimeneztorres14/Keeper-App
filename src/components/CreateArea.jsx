@@ -7,7 +7,6 @@ import { sql } from "./App";
 function CreateArea(props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [fullNote, setNote] = useState({
-    noteId:"",
     noteTitle:"",
     noteContent:""
   });
@@ -35,12 +34,12 @@ function CreateArea(props) {
   async function submitNote(event) {
     props.onAdd(fullNote);
     setNote({
-      noteId:"",
       noteTitle: "",
       noteContent: ""
     });
-    await sql('INSERT INTO notes (id, note_title, note_content) VALUES ($1, $2, $3)', [12, fullNote.noteTitle, fullNote.noteContent]);
+    await sql('INSERT INTO notes (note_title, note_content) VALUES ($1, $2)', [fullNote.noteTitle, fullNote.noteContent]);
     const notesDb = await sql('SELECT * FROM notes');
+
     event.preventDefault();
   }
 

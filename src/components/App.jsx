@@ -29,22 +29,18 @@ function App() {
 
 
   async function addNote(noteList) {
-    console.log(noteList)
     setNoteList((prevNotes) => {
       return [...prevNotes, noteList];
-    });
-    
+    }) 
   }
 
   async function deleteNote(id){
     const notes = await sql("SELECT * FROM notes");
-    console.log(notes)
-    setNoteList(notes)
-    // setNoteList((prevNotes) =>{
-    //   return prevNotes.filter((note, index)=>{
-    //     return index != id;
-    //   })
-    // })
+    setNoteList(() =>{
+      return notes.map((note)=>{
+        return {id:note.id, noteTitle: note.note_title, noteContent: note.note_content }
+      })
+    })
   }
 
   return (
@@ -54,8 +50,7 @@ function App() {
       onAdd={addNote}
       />
       {noteList.map((note, index)=>{
-        // console.log(note)
-      return <Note key={index} id={index} title={note.noteTitle} content={note.noteContent} onDelete={deleteNote}/>
+      return <Note key={index} id={note.id} title={note.noteTitle} content={note.noteContent} onDelete={deleteNote}/>
       })}
       <Footer />
     </div>
