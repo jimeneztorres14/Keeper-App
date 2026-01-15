@@ -1,35 +1,19 @@
 import React from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { sql } from "./App";
 
-function Note(props) {
-  // console.log(props)
+export default function Note({ id, title, content, onDelete, onEdit }) {
   return (
     <div className="note">
-      <h1>{props.title}</h1>
-      <p>{props.content}</p>
-      <button onClick={async ()=>{
+      {title ? <h3>{title}</h3> : null}
+      {content ? <p style={{ whiteSpace: "pre-wrap" }}>{content}</p> : null}
 
-
-        console.log(props)
-        if(props.id === undefined){
-          const notes = await sql("SELECT * FROM notes");
-          const noteToDelete = notes[notes.length - 1]
-          sql('DELETE FROM notes WHERE id =($1)', [noteToDelete.id]).then(()=>{
-            props.onDelete(props.id)
-          })
-        }else{
-          sql('DELETE FROM notes WHERE id =($1)', [props.id]).then(()=>{
-            props.onDelete(props.id)
-          })
-        }
-
-
-        
-        }} ><DeleteIcon /></button>
+      <div className="note-actions">
+        <button type="button" className="btn small" onClick={onEdit}>
+          Edit
+        </button>
+        <button type="button" className="btn small danger" onClick={() => onDelete(id)}>
+          Delete
+        </button>
+      </div>
     </div>
   );
 }
-
-export default Note;
-

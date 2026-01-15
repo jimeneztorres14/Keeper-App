@@ -12,7 +12,6 @@ function CreateArea(props) {
     noteContent:""
   });
 
-
   function handleInput(event){
     const inputValue = event.target.value;
     const inputName = event.target.name;
@@ -72,6 +71,7 @@ function CreateArea(props) {
     </div>
   );
 }
+
 
 export default CreateArea;
 
