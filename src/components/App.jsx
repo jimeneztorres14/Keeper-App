@@ -6,6 +6,7 @@ import CreateArea from "./CreateArea";
 import Toast from "./Toast";
 import { neon } from "@neondatabase/serverless";
 
+
 export const sql = neon(
   "postgresql://neondb_owner:wsDf8yzTN3eQ@ep-polished-mud-a51amk9n.us-east-2.aws.neon.tech/neondb?sslmode=require"
 );
@@ -55,40 +56,37 @@ function App() {
     fetchNotes();
   }, []);
 
-  // --- CREATE with validation + DB INSERT ---
-  async function addNote(newNote) {
+    async function addNote(newNote) {
     const title = (newNote?.title ?? "").trim();
     const content = (newNote?.content ?? "").trim();
 
-    // Prevent empty notes (both empty)
+    // Validation: prevent empty notes
     if (!title && !content) {
       showToast("Please enter a title or a note.", "error");
       return;
     }
 
+    const id = crypto.randomUUID();
+
     try {
-      // Insert + return inserted row
       const rows = await sql(
-        "INSERT INTO notes (note_title, note_content) VALUES ($1, $2) RETURNING *",
-        [title, content]
+        "INSERT INTO notes (id, note_title, note_content) VALUES ($1, $2, $3) RETURNING *",
+        [id, title, content]
       );
 
       const inserted = rows?.[0];
-      if (inserted) {
-        const created = {
-          id: inserted.id,
-          title: inserted.note_title,
-          content: inserted.note_content,
-        };
 
-        // Add to UI immediately
-        setNoteList((prev) => [created, ...prev]);
-        showToast("Note created");
-      } else {
-        // fallback
-        await fetchNotes();
-        showToast("Note created");
-      }
+      // Update UI immediately with returned row (best) or fallback to local values
+      setNoteList((prev) => [
+        {
+          id: inserted?.id ?? id,
+          title: inserted?.note_title ?? title,
+          content: inserted?.note_content ?? content,
+        },
+        ...prev,
+      ]);
+
+      showToast("Note created");
     } catch (error) {
       console.error("Error creating note:", error);
       showToast("Failed to create note", "error");
