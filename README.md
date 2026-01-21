@@ -83,6 +83,12 @@ This demonstrates the **full defect lifecycle**, from discovery to verification.
 
 ---
 
+## 🔁 Regression Testing
+
+Regression testing was performed after implementing the Update/Edit functionality to confirm that existing Create and Delete features continued to work as expected.
+
+---
+
 ## 📊 Test Execution Summary
 
 - Test cases executed: **32**
